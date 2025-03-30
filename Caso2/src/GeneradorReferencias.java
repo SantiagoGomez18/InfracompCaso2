@@ -26,7 +26,7 @@ public class GeneradorReferencias {
         this.nombreArchivo = nombreArchivo;
         this.imagen = new Imagen(nombreArchivo);
         this.tamanoPagina = tamanoPagina;
-        this.imagenOut = new Imagen("Imagenes/Salida.bmp");
+        this.imagenOut = new Imagen("Caso2/Imagenes/Salida.bmp");
     }
     public String generarReferencia() {
         System.out.println("Generando referencias para la imagen: " + this.nombreArchivo);
@@ -35,7 +35,22 @@ public class GeneradorReferencias {
         referencias.append("NF=").append(imagen.alto).append("\n");
         referencias.append("NC=").append(imagen.ancho).append("\n");
 
+        int offset = 0;
+        int offsetI = offset;
+        offset += imagen.alto * imagen.ancho * 3;
 
+        int offsetSobelX = offset;
+        offset += 3 * 3 *4;
+
+        int offsetSobelY = offset;
+        offset += 3 * 3 *4;
+
+        int offsetOut = offset;
+        offset += imagen.alto * imagen.ancho * 3;
+
+        int total = offset;
+        int numPaginas = (int) Math.ceil((double) total / tamanoPagina);
+        referencias.append("NP=").append(numPaginas).append("\n");
     
         // Recorrer la imagen aplicando los dos filtros de Sobel
         for (int i = 1; i < imagen.alto - 1; i++) {
