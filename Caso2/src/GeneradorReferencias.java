@@ -28,12 +28,16 @@ public class GeneradorReferencias {
         this.tamanoPagina = tamanoPagina;
         this.imagenOut = new Imagen("Caso2/Imagenes/Salida.bmp");
     }
+
+
     public String generarReferencia() {
         System.out.println("Generando referencias para la imagen: " + this.nombreArchivo);
+        int numReferencias = 0;
         StringBuilder referencias = new StringBuilder();
         referencias.append("TP=").append(tamanoPagina).append("\n");
         referencias.append("NF=").append(imagen.alto).append("\n");
         referencias.append("NC=").append(imagen.ancho).append("\n");
+        referencias.append("NR=algo").append("\n");
 
         int offset = 0;
         int offsetI = offset;
@@ -84,27 +88,50 @@ public class GeneradorReferencias {
                             referencias.append("Imagen[").append(fila).append("][").append(columna).append("].")
                                         .append(color).append(",").append(pagina).append(",")
                                         .append(desplazamiento).append(",R\n");
+                            numReferencias++;
                         }
-    
-                        // Calcular dirección de memoria de SOBEL_X y SOBEL_Y (se repetirán 3 veces)
                         int filaSobel = ki + 1;
                         int columnaSobel = kj + 1;
-                        int osSobel = (filaSobel * 3 + columnaSobel) * Integer.BYTES;
-                        int pagina_sobel = osSobel / tamanoPagina;
-                        int desplazamiento_sobel = osSobel % tamanoPagina;
-    
+                
+                        // Calcular la posición de memoria en la matriz 3x3
+                        int posX = offsetSobelX + (filaSobel * 3 + columnaSobel) * 4;
+                        int posY = offsetSobelY + (filaSobel * 3 + columnaSobel) * 4;
+                
+                        int paginaX = posX / tamanoPagina;
+                        int desplazamientoX = posX % tamanoPagina;
+                
+                        int paginaY = posY / tamanoPagina;
+                        int desplazamientoY = posY % tamanoPagina;
+                
+                        // Almacenar referencias correctas
                         for (int s = 0; s < 3; s++) {
                             referencias.append("SOBEL_X[").append(filaSobel).append("][").append(columnaSobel)
-                                        .append("],").append(pagina_sobel).append(",")
-                                        .append(desplazamiento_sobel).append(",R\n");
+                                        .append("],").append(paginaX).append(",")
+                                        .append(desplazamientoX).append(",R\n");
+                            numReferencias++;
                         }
-    
                         for (int s = 0; s < 3; s++) {
                             referencias.append("SOBEL_Y[").append(filaSobel).append("][").append(columnaSobel)
-                                        .append("],").append(pagina_sobel).append(",")
-                                        .append(desplazamiento_sobel).append(",R\n");
+                                        .append("],").append(paginaY).append(",")
+                                        .append(desplazamientoY).append(",R\n");
+                            numReferencias++;
                         }
-    
+
+                        for(int l=0; l<3; l++){
+                            int pos = offsetOut + (i * imagen.ancho * 3) + (j * 3) + l;
+                            int pagina = pos / tamanoPagina;
+                            int desplazamiento = pos % tamanoPagina;
+        
+                            String color = "r";
+                            if(l==1){
+                                color = "g";
+                            } else if(l==2){
+                                color = "b";
+                            }
+                            referencias.append("RTA[").append(i).append("][").append(j).append("].")
+                                        .append(color).append(",").append(pagina).append(",")
+                                        .append(desplazamiento).append(",R\n");
+                        }
                         // Aplicar las máscaras de Sobel a cada canal de color
                         int pesoX = SOBEL_X[filaSobel][columnaSobel];
                         int pesoY = SOBEL_Y[filaSobel][columnaSobel];
@@ -118,7 +145,6 @@ public class GeneradorReferencias {
                         gradYBlue += blue * pesoY;
                     }
                 }
-    
                 // Calcular la magnitud del gradiente
                 int red = Math.min(Math.max((int) Math.sqrt(gradXRed * gradXRed + gradYRed * gradYRed), 0), 255);
                 int green = Math.min(Math.max((int) Math.sqrt(gradXGreen * gradXGreen + gradYGreen * gradYGreen), 0), 255);
@@ -129,12 +155,11 @@ public class GeneradorReferencias {
                 imagenOut.imagen[i][j][1] = (byte) green;
                 imagenOut.imagen[i][j][2] = (byte) blue;
                 
-                for(int s = 0; s < 3; s++){
-                    
-                }
             }
         }
         
+        int posDeNR = referencias.indexOf("NR=algo");
+        referencias.replace(posDeNR, posDeNR + "NR=algo".length(), "NR=" + numReferencias);
 
         String nombreSalida = "referencias_" + new java.io.File(this.nombreArchivo).getName().replace(".bmp", "") + ".txt";
 
