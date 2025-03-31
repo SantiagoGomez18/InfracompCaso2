@@ -44,7 +44,7 @@ public class ProcesadorReferencias {
                 marcos.addPag(pag);
             } else {
                 int idPagEliminar = buscarPagRetirar();
-                boolean eliminado = removerPagina(idPagEliminar);
+                removerPagina(idPagEliminar);
                 marcos.addPag(pag);
             }
 
