@@ -8,7 +8,6 @@ public class Lector extends Thread {
     private MarcoReferencia marcoReferencia;
     private ProcesadorReferencias procesadorReferencias;
     private int contador=0;
-    private int contador2=0;
 
     public Lector(MarcoPaginas marcos, MarcoReferencia marcoReferencia, ProcesadorReferencias procesadorReferencias) {
         this.procesadorReferencias = procesadorReferencias;
@@ -43,13 +42,9 @@ public class Lector extends Thread {
 
                 procesadorReferencias.actualizarMarco(pag);
                 contador++;
-                contador2++;
                 if (contador == 10000){
                     contador = 0;
                     Thread.sleep(1);
-                }
-                if (contador2 == 37){
-                    break;
                 }
                 
             }

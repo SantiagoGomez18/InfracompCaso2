@@ -1,5 +1,5 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class ProcesadorReferencias {
@@ -23,107 +23,70 @@ public class ProcesadorReferencias {
         return nombreArchivoRef;
     }
 
-    public int buscarPag(int idPag){
-        for (int i=0; i<marcos.getMarcos().size(); i++){
-            if (marcos.getMarcos().get(i).getId() == idPag){
+    public int buscarPag(int idPag) {
+        for (int i = 0; i < marcos.getPaginas().size(); i++) {
+            if (marcos.getPaginas().get(i).getId() == idPag) {
                 return i;
             }
         }
         return -1;
     }
 
-    public void actualizarMarco(Pagina pag){
+    public void actualizarMarco(Pagina pag) {
         int pos = buscarPag(pag.getId());
-        marcos.size();
-        if(pos != -1){
+
+        if (pos != -1) { 
             hitCounter++;
             referencias.ActualizarRefExistente(pag);
-            
-        }else{
-            System.out.println("Entro al else");
+        } else { 
             missCounter++;
-            if(marcos.getMarcos().size() < nMarcos){
+            if (marcos.getPaginas().size() < nMarcos) {
                 marcos.addPag(pag);
-                for (Pagina p : marcos.getMarcos()){  
-                    System.out.println("Pag del marco: " + p.getId());
-                }
-                if(!referencias.existeReferencia(pag.getId())){
-                    referencias.addReferencia(pag);
-                }else{
-                    referencias.ActualizarRefExistente(pag);
-                }
-            }else{
-                int idPag = buscarPagRetirar();
-                System.out.println("Se retira la pagina: " + idPag);
-                int posPag = buscarPag(idPag);
-                System.out.println("Dentro");
-                marcos.size();
-
-                if (posPag != -1) { 
-                    marcos.getMarcos().remove(posPag);
-                
-                } else {
-                    
-                }
+            } else {
+                int idPagEliminar = buscarPagRetirar();
+                boolean eliminado = removerPagina(idPagEliminar);
                 marcos.addPag(pag);
+            }
 
-
-                if(!referencias.existeReferencia(pag.getId())){
-                    referencias.ActualizarRefExistente(pag);
-                }else{
-                    referencias.ActualizarRefExistente(pag);
-                }
+            if (!referencias.existeReferencia(pag.getId())) {
+                referencias.addReferencia(pag);
+            } else {
+                referencias.ActualizarRefExistente(pag);
             }
         }
+
     }
 
-    public int buscarPagRetirar(){
+    public int buscarPagRetirar() {
         ArrayList<Pagina> ceroCero = new ArrayList<>();
         ArrayList<Pagina> unoCero = new ArrayList<>();
         ArrayList<Pagina> ceroUno = new ArrayList<>();
         ArrayList<Pagina> unoUno = new ArrayList<>();
 
-        for (Pagina pag : referencias.getReferencias()){
-            System.out.println("Pag: " + pag.getId() + " Lectura: " + pag.isLectura() + " Escritura: " + pag.isEscritura());
-            if (!pag.isLectura() && !pag.isEscritura()){
+        for (Pagina pag : referencias.getReferencias()) {
+            if (!pag.isLectura() && !pag.isEscritura()) {
                 ceroCero.add(pag);
-            }if (!pag.isLectura() && pag.isEscritura()){
+            } else if (!pag.isLectura() && pag.isEscritura()) {
                 ceroUno.add(pag);
-            }if (pag.isLectura() && !pag.isEscritura()){
+            } else if (pag.isLectura() && !pag.isEscritura()) {
                 unoCero.add(pag);
-            }else{
+            } else {
                 unoUno.add(pag);
             }
         }
+
         int idAEliminar = buscarPagAux(ceroCero, marcos);
-        if(ceroCero.isEmpty()) System.out.println("CeroCero: 0");
-        for(Pagina p : ceroCero){
-            System.out.println("CeroCero: " + p.getId());
-        }
-        if (ceroUno.isEmpty()) System.out.println("UnoCero: 0");
-        for(Pagina p : ceroUno){
-            System.out.println("UnoCero: " + p.getId());
-        }
-        if (unoCero.isEmpty()) System.out.println("CeroUno: 0");
-        for(Pagina p : unoCero){
-            System.out.println("CeroUno: " + p.getId());
-        }
-        if (unoUno.isEmpty()) System.out.println("UnoUno: 0");
-        for(Pagina p : unoUno){
-            System.out.println("UnoUno: " + p.getId());
-        }
-
-
+        if (idAEliminar == -1) idAEliminar = buscarPagAux(unoCero, marcos);
+        if (idAEliminar == -1) idAEliminar = buscarPagAux(ceroUno, marcos);
+        if (idAEliminar == -1) idAEliminar = buscarPagAux(unoUno, marcos);
 
         return idAEliminar;
-
     }
 
-    public int buscarPagAux(ArrayList<Pagina> lista, MarcoPaginas marcos){
-        for(Pagina p : lista){
-            for (Pagina pag : marcos.getMarcos()){
-
-                if (p.getId() == pag.getId()){
+    public int buscarPagAux(ArrayList<Pagina> lista, MarcoPaginas marcos) {
+        for (Pagina p : lista) {
+            for (Pagina pag : marcos.getPaginas()) {
+                if (p.getId() == pag.getId()) {
                     return p.getId();
                 }
             }
@@ -131,7 +94,17 @@ public class ProcesadorReferencias {
         return -1;
     }
 
-
+    public boolean removerPagina(int id) {
+        Iterator<Pagina> iter = marcos.getPaginas().iterator();
+        while (iter.hasNext()) {
+            Pagina p = iter.next();
+            if (p.getId() == id) {
+                iter.remove();
+                return true;
+            }
+        }
+        return false;
+    }
 
     public int getHits() {
         return hitCounter;
@@ -140,5 +113,4 @@ public class ProcesadorReferencias {
     public int getFallos() {
         return missCounter;
     }
-    
 }

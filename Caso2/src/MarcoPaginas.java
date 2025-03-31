@@ -2,27 +2,27 @@ import java.util.ArrayList;
 
 public class MarcoPaginas {
     private int cantidad;
-    private ArrayList<Pagina> marcos;
+    private ArrayList<Pagina> paginas;
 
     public MarcoPaginas(int cantidad) {
         this.cantidad = cantidad;
-        this.marcos = new ArrayList<>();
+        this.paginas = new ArrayList<>();
     }
 
     public int getCantidad() {
         return cantidad;
     }
 
-    public ArrayList<Pagina> getMarcos() {
-        return marcos;
+    public ArrayList<Pagina> getPaginas() {
+        return paginas;
     }
     
     public void addPag(Pagina pag){
-        marcos.add(pag);
+        paginas.add(pag);
     }
 
     public void size(){
-        System.out.println("El tamaño de la lista es: " + marcos.size());
+        System.out.println("El tamaño de la lista es: " + paginas.size());
     }
     
 }
