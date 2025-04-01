@@ -39,7 +39,7 @@ public class Main {
                 actualizador.start();
             
                 try {
-                    lector.join();
+                    lector.join(); //Hago el join para que el output salga antes que el main y se vea bonito Att: Santi :p
                 } catch (InterruptedException e) {
                     System.out.println("Error esperando al lector: " + e.getMessage());
                 }
