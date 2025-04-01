@@ -2,9 +2,6 @@ import java.util.Scanner;
 
 public class Main {
     private static boolean bandera = true;
-    private static MarcoPaginas marcos;
-    private static MarcoReferencia marcoReferencia;
-    private static ProcesadorReferencias procesadorReferencias;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -26,29 +23,30 @@ public class Main {
                 GeneradorReferencias generador = new GeneradorReferencias(tamanoPagina, nombreArchivoCompleto);
                 generador.generarReferencia();
             } else if (opcion == 2) {
-                System.out.println("Ingrese el numero de marcos de pagina: ");
-                int nMarcos = scanner.nextInt();
-
-                System.out.println("Ingrese el nombre del archivo de referencia: ");
-                String nombreArchivoReferencia = scanner.next();
-                String nombreArchivoReferenciaCompleto = "Caso2/Referencias/" + nombreArchivoReferencia + ".txt";
-                procesadorReferencias = new ProcesadorReferencias(nMarcos, nombreArchivoReferenciaCompleto);
-
-                marcoReferencia = new MarcoReferencia();
-                marcos = new MarcoPaginas(nMarcos);
-                Lector lector = new Lector(marcos, marcoReferencia, procesadorReferencias);
-                Actualizador actualizador = new Actualizador(marcoReferencia);
-
+                System.out.print("Ingrese el número de marcos de página: ");
+                int numMarcos = scanner.nextInt();
+                scanner.nextLine(); 
+            
+                System.out.print("Ingrese el nombre del archivo de referencia: ");
+                String nombreArchivo = scanner.nextLine();
+                String rutaArchivo = "Caso2/Referencias/" + nombreArchivo + ".txt";
+            
+                MemoriaCompartida memoria = new MemoriaCompartida(numMarcos);
+                Lector lector = new Lector(memoria, rutaArchivo);
+                Actualizador actualizador = new Actualizador(memoria);
+            
                 lector.start();
                 actualizador.start();
-
-                //Pongo en espera a el main hasta que el lector termine para que se vea bonito el oitput, Att: Santi c: 
+            
                 try {
                     lector.join();
                 } catch (InterruptedException e) {
-                    System.out.println("Error esperando la finalización del lector: " + e.getMessage());
+                    System.out.println("Error esperando al lector: " + e.getMessage());
                 }
-
+            
+                actualizador.detener(); 
+            
+                System.out.println("==== Fin del procesamiento ====");
             } else if (opcion == 3) {
                 bandera = false;
                 System.out.println("Saliendo del programa...");
