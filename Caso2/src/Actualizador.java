@@ -1,5 +1,5 @@
 public class Actualizador extends Thread {
-    private final MemoriaCompartida memoria;
+    private MemoriaCompartida memoria;
     private boolean activo = true;
 
     public Actualizador(MemoriaCompartida memoria) {

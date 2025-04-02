@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MemoriaCompartida {
-    private final ArrayList<Pagina> memoria;
-    private final int maxMarcos;
+    private ArrayList<Pagina> memoria;
+    private int maxMarcos;
 
     public MemoriaCompartida(int maxMarcos) {
         this.maxMarcos = maxMarcos;

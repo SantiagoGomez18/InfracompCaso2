@@ -2,14 +2,13 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Lector extends Thread {
-    private final MemoriaCompartida memoria;
-    private final String nombreArchivo;
+    private MemoriaCompartida memoria;
+    private String nombreArchivo;
     private int hits = 0;
     private int misses = 0;
     private int totalRefs = 0;
-
-    private final long tiempoRAM = 50;  
-    private final long tiempoSWAP = 10000000; 
+    private long tiempoRAM = 50;  
+    private long tiempoSWAP = 10000000; 
     private long tiempoTotal = 0;
 
     public Lector(MemoriaCompartida memoria, String nombreArchivo) {
