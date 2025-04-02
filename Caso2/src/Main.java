@@ -7,7 +7,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (bandera) {
-            System.out.println("==== MENU ====");
+            System.out.println("====== MENU ======");
             System.out.println("1. Generar Referencias");
             System.out.println("2. Procesar Referencias");
             System.out.println("3. Salir");
@@ -46,7 +46,7 @@ public class Main {
             
                 actualizador.detener(); 
             
-                System.out.println("==== Fin del procesamiento ====");
+
             } else if (opcion == 3) {
                 bandera = false;
                 System.out.println("Saliendo del programa...");
