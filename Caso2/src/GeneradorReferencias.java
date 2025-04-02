@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 
 public class GeneradorReferencias {
     private Imagen imagen;
-    private Imagen imagenOut;
     private int tamanoPagina;
     private String nombreArchivo;
 
@@ -23,7 +22,6 @@ public class GeneradorReferencias {
         this.nombreArchivo = nombreArchivo;
         this.imagen = new Imagen(nombreArchivo);
         this.tamanoPagina = tamanoPagina;
-        this.imagenOut = new Imagen("Caso2/Imagenes/Salida.bmp");
     }
 
     public String generarReferencia() {

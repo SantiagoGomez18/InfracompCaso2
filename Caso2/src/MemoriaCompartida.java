@@ -30,11 +30,13 @@ public class MemoriaCompartida {
     }
 
     public synchronized void removerPagina(int id) {
+        boolean eliminada = false;
         Iterator<Pagina> pagIterada = memoria.iterator();
-        while (pagIterada.hasNext()) {
+        
+        while (pagIterada.hasNext() && !eliminada) {
             if (pagIterada.next().getId() == id) {
                 pagIterada.remove();
-                break;
+                eliminada = true; 
             }
         }
     }
