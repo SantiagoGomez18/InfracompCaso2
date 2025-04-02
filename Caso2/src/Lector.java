@@ -10,6 +10,7 @@ public class Lector extends Thread {
     private long tiempoRAM = 50;  
     private long tiempoSWAP = 10000000; 
     private long tiempoTotal = 0;
+    private int contador = 0;
 
     public Lector(MemoriaCompartida memoria, String nombreArchivo) {
         this.memoria = memoria;
@@ -52,6 +53,11 @@ public class Lector extends Thread {
     
                 Pagina pagNueva = new Pagina(idPag, esLectura, esEscritura);
                 procesarAcceso(pagNueva);
+                contador++;
+                if(contador == 10000){
+                    contador = 0;
+                    Thread.sleep(1); 
+                }
             }
     
             long fin = System.nanoTime();
